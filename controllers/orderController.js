@@ -3,14 +3,11 @@ const Order = require('../models/Order');
 const createOrder = async (req, res) => {
   try {
     const { name, description } = req.body;
-    if (!name) {
-      return res.status(400).json({ error: 'Name is required' });
-    }
     const newOrder = new Order({ name, description });
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error', message: error.message });
   }
 };
 
@@ -19,7 +16,7 @@ const getOrders = async (req, res) => {
     const orders = await Order.find();
     res.json(orders);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error', message: error.message });
   }
 };
 
@@ -35,7 +32,7 @@ const getOrderById = async (req, res) => {
     if (error.name === 'CastError') {
       return res.status(400).json({ error: 'Invalid order ID' });
     }
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error', message: error.message });
   }
 };
 
@@ -59,7 +56,7 @@ const updateOrder = async (req, res) => {
     if (error.name === 'CastError') {
       return res.status(400).json({ error: 'Invalid order ID' });
     }
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error', message: error.message });
   }
 };
 
@@ -75,7 +72,7 @@ const deleteOrder = async (req, res) => {
     if (error.name === 'CastError') {
       return res.status(400).json({ error: 'Invalid order ID' });
     }
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'Server error', message: error.message });
   }
 };
 
