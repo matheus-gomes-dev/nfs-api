@@ -1,10 +1,16 @@
+require('dotenv').config();
+
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const authController = require('./controllers/authController');
 const orderController = require('./controllers/orderController');
 const { authenticateToken } = require('./middlewares/authMiddleware');
+const connectDB = require('./models/database');
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Connect to MongoDB
+connectDB();
 
 // Middleware to parse JSON bodies
 app.use(express.json());

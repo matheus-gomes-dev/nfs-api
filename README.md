@@ -1,12 +1,16 @@
 # NFS Restaurant API
 
-A simple Node.js Express API with CRUD operations for managing orders. The project is structured with separate controllers for better organization.
+A simple Node.js Express API with CRUD operations for managing orders. Uses MongoDB with Mongoose for data persistence and JWT for authentication.
 
 ## Installation
 
 1. Clone or download the project.
 2. Navigate to the project directory.
 3. Run `npm install` to install dependencies.
+4. Set up environment variables:
+   - Copy `.env.example` to `.env`
+   - Update the `MONGODB_URI` with your MongoDB connection string
+   - Set up MongoDB locally or use MongoDB Atlas
 
 ## Running the API
 
@@ -21,6 +25,9 @@ A simple Node.js Express API with CRUD operations for managing orders. The proje
   - `orderController.js` - Handles order CRUD operations
 - `middlewares/` - Folder containing middleware functions
   - `authMiddleware.js` - JWT authentication middleware
+- `models/` - Folder containing database models and connection
+  - `database.js` - MongoDB connection setup
+  - `Order.js` - Order model schema
 
 ## API Endpoints
 
@@ -65,7 +72,8 @@ curl -X DELETE http://localhost:3000/orders/1
 
 ## Notes
 
-- This is a basic implementation using in-memory storage. Data will be lost when the server restarts.
-- For production use, consider adding a database like MongoDB or PostgreSQL.
-- Basic JWT authentication is implemented. Use the /auth endpoint to get a token, then include it in Authorization header as Bearer token for protected routes (not yet protected in this version).
-- Add proper user management and password hashing for production.
+- Uses MongoDB with Mongoose for data persistence
+- Data is now persistent across server restarts
+- For production use, set up proper MongoDB authentication and use environment variables for sensitive data
+- Basic JWT authentication is implemented. Use the /auth endpoint to get a token, then include it in Authorization header as Bearer token for protected routes
+- Add proper user management and password hashing for production

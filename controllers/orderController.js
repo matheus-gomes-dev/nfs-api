@@ -1,52 +1,82 @@
-// In-memory data store (for demonstration purposes)
-let orders = [];
-let nextId = 1;
+const Order = require('../models/Order');
 
-const createOrder = (req, res) => {
-  const { name, description } = req.body;
-  if (!name) {
-    return res.status(400).json({ error: 'Name is required' });
+const createOrder = async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    if (!name) {
+      return res.status(400).json({ error: 'Name is required' });
+    }
+    const newOrder = new Order({ name, description });
+    const savedOrder = await newOrder.save();
+    res.status(201).json(savedOrder);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
   }
-  const newOrder = { id: nextId++, name, description };
-  orders.push(newOrder);
-  res.status(201).json(newOrder);
 };
 
-const getOrders = (req, res) => {
-  res.json(orders);
+const getOrders = async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
 };
 
-const getOrderById = (req, res) => {
-  const id = parseInt(req.params.id);
-  const order = orders.find(o => o.id === id);
-  if (!order) {
-    return res.status(404).json({ error: 'Order not found' });
+const getOrderById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.json(order);
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid order ID' });
+    }
+    res.status(500).json({ error: 'Server error' });
   }
-  res.json(order);
 };
 
-const updateOrder = (req, res) => {
-  const id = parseInt(req.params.id);
-  const { name, description } = req.body;
-  const orderIndex = orders.findIndex(o => o.id === id);
-  if (orderIndex === -1) {
-    return res.status(404).json({ error: 'Order not found' });
+const updateOrder = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { name, description } = req.body;
+    if (!name) {
+      return res.status(400).json({ error: 'Name is required' });
+    }
+    const updatedOrder = await Order.findByIdAndUpdate(
+      id,
+      { name, description },
+      { new: true, runValidators: true }
+    );
+    if (!updatedOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.json(updatedOrder);
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid order ID' });
+    }
+    res.status(500).json({ error: 'Server error' });
   }
-  if (!name) {
-    return res.status(400).json({ error: 'Name is required' });
-  }
-  orders[orderIndex] = { id, name, description };
-  res.json(orders[orderIndex]);
 };
 
-const deleteOrder = (req, res) => {
-  const id = parseInt(req.params.id);
-  const orderIndex = orders.findIndex(o => o.id === id);
-  if (orderIndex === -1) {
-    return res.status(404).json({ error: 'Order not found' });
+const deleteOrder = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const deletedOrder = await Order.findByIdAndDelete(id);
+    if (!deletedOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.json(deletedOrder);
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ error: 'Invalid order ID' });
+    }
+    res.status(500).json({ error: 'Server error' });
   }
-  const deletedOrder = orders.splice(orderIndex, 1);
-  res.json(deletedOrder[0]);
 };
 
 module.exports = {
