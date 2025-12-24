@@ -31,15 +31,15 @@ app.get('/orders', authenticateToken, orderController.getOrders);
 app.get('/orders/:id', orderController.getOrderById);
 
 // UPDATE: Update an order by ID
-app.put('/orders/:id', orderController.updateOrder);
+app.put('/orders/:id', authenticateToken, orderController.updateOrder);
 
 // DELETE: Delete an order by ID
-app.delete('/orders/:id', orderController.deleteOrder);
+app.delete('/orders/:id', authenticateToken, orderController.deleteOrder);
 
 // Product CRUD Routes
 
 // CREATE: Add a new product
-app.post('/products', productController.createProduct);
+app.post('/products', authenticateToken, productController.createProduct);
 
 // READ: Get all products
 app.get('/products', productController.getProducts);
@@ -48,10 +48,10 @@ app.get('/products', productController.getProducts);
 app.get('/products/:id', productController.getProductById);
 
 // UPDATE: Update a product by ID
-app.put('/products/:id', productController.updateProduct);
+app.put('/products/:id', authenticateToken, productController.updateProduct);
 
 // DELETE: Delete a product by ID
-app.delete('/products/:id', productController.deleteProduct);
+app.delete('/products/:id', authenticateToken, productController.deleteProduct);
 
 // Start the server
 app.listen(port, () => {
