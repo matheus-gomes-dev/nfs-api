@@ -1,7 +1,7 @@
 {
   "name": "nfs-restaurant-api",
   "version": "1.0.0",
-  "description": "A simple Node.js Express API with CRUD routes",
+  "description": "A Node.js Express API with CRUD operations for managing orders and products, using MongoDB and JWT authentication",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

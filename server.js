@@ -4,6 +4,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const authController = require('./controllers/authController');
 const orderController = require('./controllers/orderController');
+const productController = require('./controllers/productController');
 const { authenticateToken } = require('./middlewares/authMiddleware');
 const connectDB = require('./models/database');
 const app = express();
@@ -34,6 +35,23 @@ app.put('/orders/:id', orderController.updateOrder);
 
 // DELETE: Delete an order by ID
 app.delete('/orders/:id', orderController.deleteOrder);
+
+// Product CRUD Routes
+
+// CREATE: Add a new product
+app.post('/products', productController.createProduct);
+
+// READ: Get all products
+app.get('/products', productController.getProducts);
+
+// READ: Get a single product by ID
+app.get('/products/:id', productController.getProductById);
+
+// UPDATE: Update a product by ID
+app.put('/products/:id', productController.updateProduct);
+
+// DELETE: Delete a product by ID
+app.delete('/products/:id', productController.deleteProduct);
 
 // Start the server
 app.listen(port, () => {

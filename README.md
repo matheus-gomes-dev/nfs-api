@@ -1,6 +1,6 @@
 # NFS Restaurant API
 
-A simple Node.js Express API with CRUD operations for managing orders. Uses MongoDB with Mongoose for data persistence and JWT for authentication.
+A Node.js Express API with CRUD operations for managing orders and products. Uses MongoDB with Mongoose for data persistence and JWT for authentication.
 
 ## Installation
 
@@ -23,11 +23,13 @@ A simple Node.js Express API with CRUD operations for managing orders. Uses Mong
 - `controllers/` - Folder containing controller logic
   - `authController.js` - Handles authentication routes
   - `orderController.js` - Handles order CRUD operations
+  - `productController.js` - Handles product CRUD operations
 - `middlewares/` - Folder containing middleware functions
   - `authMiddleware.js` - JWT authentication middleware
 - `models/` - Folder containing database models and connection
   - `database.js` - MongoDB connection setup
   - `Order.js` - Order model schema
+  - `Product.js` - Product model schema
 
 ## API Endpoints
 
@@ -42,6 +44,14 @@ A simple Node.js Express API with CRUD operations for managing orders. Uses Mong
 - **POST /orders** - Create a new order (requires `name` in body, optional `description`)
 - **PUT /orders/:id** - Update an order by ID (requires `name` in body, optional `description`)
 - **DELETE /orders/:id** - Delete an order by ID
+
+### Products
+
+- **GET /products** - Retrieve all products
+- **GET /products/:id** - Retrieve a single product by ID
+- **POST /products** - Create a new product (requires `name`, `price`, `category` in body, optional `description`, `available`)
+- **PUT /products/:id** - Update a product by ID (requires `name`, `price`, `category` in body, optional `description`, `available`)
+- **DELETE /products/:id** - Delete a product by ID
 
 ### Example Requests
 
@@ -68,6 +78,26 @@ curl -X PUT http://localhost:3000/orders/1 -H "Content-Type: application/json" -
 #### Delete an order
 ```bash
 curl -X DELETE http://localhost:3000/orders/1
+```
+
+#### Create a product
+```bash
+curl -X POST http://localhost:3000/products -H "Content-Type: application/json" -d '{"name": "Margherita Pizza", "description": "Classic pizza with tomato sauce and mozzarella", "price": 12.99, "category": "Pizza", "available": true}'
+```
+
+#### Get all products
+```bash
+curl http://localhost:3000/products
+```
+
+#### Update a product
+```bash
+curl -X PUT http://localhost:3000/products/1 -H "Content-Type: application/json" -d '{"name": "Updated Pizza", "description": "Updated description", "price": 14.99, "category": "Pizza", "available": true}'
+```
+
+#### Delete a product
+```bash
+curl -X DELETE http://localhost:3000/products/1
 ```
 
 ## Notes
