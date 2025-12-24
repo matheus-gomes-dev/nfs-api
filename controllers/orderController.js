@@ -2,8 +2,11 @@ const Order = require('../models/Order');
 
 const createOrder = async (req, res) => {
   try {
-    const { name, description } = req.body;
-    const newOrder = new Order({ name, description });
+    const { name, items, status } = req.body;
+    if (!name || !items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: 'Name and non-empty items array are required' });
+    }
+    const newOrder = new Order({ name, items, status });
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (error) {
@@ -13,7 +16,7 @@ const createOrder = async (req, res) => {
 
 const getOrders = async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find().populate('items');
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: 'Server error', message: error.message });
@@ -23,7 +26,7 @@ const getOrders = async (req, res) => {
 const getOrderById = async (req, res) => {
   try {
     const id = req.params.id;
-    const order = await Order.findById(id);
+    const order = await Order.findById(id).populate('items');
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }
@@ -39,15 +42,16 @@ const getOrderById = async (req, res) => {
 const updateOrder = async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, description } = req.body;
-    if (!name) {
-      return res.status(400).json({ error: 'Name is required' });
+    const { name, items, status } = req.body;
+    if (!name || !items || !Array.isArray(items) || items.length === 0 || !status) {
+      return res.status(400).json({ error: 'Name, non-empty items array, and status are required' });
     }
+    const updateData = { name, items, status };
     const updatedOrder = await Order.findByIdAndUpdate(
       id,
-      { name, description },
+      updateData,
       { new: true, runValidators: true }
-    );
+    ).populate('items');
     if (!updatedOrder) {
       return res.status(404).json({ error: 'Order not found' });
     }

@@ -41,8 +41,8 @@ A Node.js Express API with CRUD operations for managing orders and products. Use
 
 - **GET /orders** - Retrieve all orders (requires JWT token in Authorization header)
 - **GET /orders/:id** - Retrieve a single order by ID
-- **POST /orders** - Create a new order (requires `name` in body, optional `description`)
-- **PUT /orders/:id** - Update an order by ID (requires `name` in body, optional `description`)
+- **POST /orders** - Create a new order (requires `name`, `items` array, and `status` in body)
+- **PUT /orders/:id** - Update an order by ID (requires `name`, `items` array, and `status` in body)
 - **DELETE /orders/:id** - Delete an order by ID
 
 ### Products
@@ -62,7 +62,7 @@ curl -X POST http://localhost:3000/auth -H "Content-Type: application/json" -d '
 
 #### Create an order
 ```bash
-curl -X POST http://localhost:3000/orders -H "Content-Type: application/json" -d '{"name": "Pizza Order", "description": "Delicious cheese pizza"}'
+curl -X POST http://localhost:3000/orders -H "Content-Type: application/json" -d '{"name": "Pizza Order", "items": ["507f1f77bcf86cd799439011", "507f191e810c19729de860ea"], "status": "waiting"}'
 ```
 
 #### Get all orders
@@ -72,7 +72,7 @@ curl -H "Authorization: Bearer YOUR_JWT_TOKEN" http://localhost:3000/orders
 
 #### Update an order
 ```bash
-curl -X PUT http://localhost:3000/orders/1 -H "Content-Type: application/json" -d '{"name": "Updated Pizza Order", "description": "Even better pizza"}'
+curl -X PUT http://localhost:3000/orders/1 -H "Content-Type: application/json" -d '{"name": "Updated Pizza Order", "items": ["507f1f77bcf86cd799439011"], "status": "completed"}'
 ```
 
 #### Delete an order
@@ -103,6 +103,8 @@ curl -X DELETE http://localhost:3000/products/1
 ## Notes
 
 - Uses MongoDB with Mongoose for data persistence
+- Orders contain references to Products via the `items` array
+- Order status can be: `waiting` (default), `completed`, or `canceled`
 - Data is now persistent across server restarts
 - For production use, set up proper MongoDB authentication and use environment variables for sensitive data
 - Basic JWT authentication is implemented. Use the /auth endpoint to get a token, then include it in Authorization header as Bearer token for protected routes

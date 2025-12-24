@@ -6,9 +6,16 @@ const orderSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  description: {
+  items: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true
+  }],
+  status: {
     type: String,
-    trim: true
+    enum: ['waiting', 'completed', 'canceled'],
+    default: 'waiting',
+    required: true
   },
 }, {
   timestamps: true
