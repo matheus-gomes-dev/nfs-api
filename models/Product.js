@@ -15,6 +15,15 @@ const productSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
+  cost: {
+    type: Number,
+    required: false,
+    default: 0
+  },
+  imgSrc: {
+    type: String,
+    trim: true
+  },
   category: {
     type: String,
     enum: ['lanches', 'açaí', 'bebidas', 'sobremesas', 'refeições'],
