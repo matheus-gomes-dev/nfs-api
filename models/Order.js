@@ -17,6 +17,10 @@ const orderSchema = new mongoose.Schema({
     default: 'aguardando',
     required: true
   },
+  comment: {
+    type: String,
+    trim: true
+  }
 }, {
   timestamps: true
 });
