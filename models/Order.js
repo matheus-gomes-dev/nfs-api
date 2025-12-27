@@ -14,8 +14,7 @@ const orderSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['aguardando', 'completa', 'canceleda'],
-    default: 'aguardando',
-    required: true
+    default: 'aguardando'
   },
   comment: {
     type: String,

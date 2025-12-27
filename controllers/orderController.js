@@ -2,9 +2,9 @@ const Order = require('../models/Order');
 
 const createOrder = async (req, res) => {
   try {
-    const { name, items, status } = req.body;
-    if (!name || !items || !Array.isArray(items) || items.length === 0 || !status) {
-      return res.status(400).json({ error: 'Name, status and non-empty items array are required' });
+    const { name, items } = req.body;
+    if (!name || !items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: 'Name and non-empty items array are required' });
     }
     const newOrder = new Order(req.body);
     const savedOrder = await newOrder.save();
