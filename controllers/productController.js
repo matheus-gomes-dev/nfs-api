@@ -2,11 +2,11 @@ const Product = require('../models/Product');
 
 const createProduct = async (req, res) => {
   try {
-    const { name, description, price, category, available } = req.body;
+    const { name, price, category } = req.body;
     if (!name || !price || !category) {
       return res.status(400).json({ error: 'Name, price, and category are required' });
     }
-    const newProduct = new Product({ name, description, price, category, available });
+    const newProduct = new Product(req.body);
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
   } catch (error) {
@@ -42,13 +42,9 @@ const getProductById = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, description, price, category, available } = req.body;
-    if (!name || !price || !category) {
-      return res.status(400).json({ error: 'Name, price, and category are required' });
-    }
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { name, description, price, category, available },
+      { $set: { ...req.body } },
       { new: true, runValidators: true }
     );
     if (!updatedProduct) {
