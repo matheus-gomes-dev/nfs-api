@@ -30,6 +30,9 @@ app.use(express.json());
 
 // Auth Route
 app.post('/auth', authController.login);
+app.post('/auth/verify', authenticateToken, (req, res) => {
+  res.status(200).json({ message: 'Token is valid' });
+});
 
 // CRUD Routes
 
