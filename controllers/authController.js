@@ -7,7 +7,7 @@ const login = (req, res) => {
     return res.status(400).json({ error: 'User and password are required' });
   }
   // Simple authentication (replace with real user database)
-  if (user === 'admin' && password === 'password') {
+  if (user === process.env.ADMIN_USER && password === process.env.ADMIN_PASSWORD) {
     const token = jwt.sign({ user }, JWT_SECRET, { expiresIn: '24h' });
     res.json({ token });
   } else {
