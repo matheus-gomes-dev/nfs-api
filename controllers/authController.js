@@ -11,7 +11,7 @@ const login = (req, res) => {
     const token = jwt.sign({ user }, JWT_SECRET, { expiresIn: '24h' });
     res.json({ token });
   } else {
-    res.status(401).json({ error: `Invalid credentials! User: ${user}, Password: ${password}. Expected User: ${process.env.ADMIN_USER}, Expected Password: ${process.env.ADMIN_PASSWORD}` });
+    res.status(401).json({ error: 'Invalid credentials!' });
   }
 };
 
