@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema({
   }],
   status: {
     type: String,
-    enum: ['aguardando', 'completa', 'cancelada'],
+    enum: ['aguardando', 'completa', 'cancelada', 'pagando'],
     default: 'aguardando'
   },
   comment: {
