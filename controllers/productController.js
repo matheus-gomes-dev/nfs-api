@@ -1,5 +1,9 @@
 const Product = require('../models/Product');
-const { fileUploadUtil } = require('../utils/upload');
+const { 
+  fileUploadUtil,
+  shouldDeleteExistingFile,
+  deleteFileUtil
+} = require('../utils/upload');
 
 const createProduct = async (req, res) => {
   const { name, price, category, imgSrc: imageUpload } = req.body;
@@ -50,9 +54,17 @@ const getProductById = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const id = req.params.id;
+    let newImgSrc = req.body.imgSrc ?? '';
+    const existingProduct = await Product.findById(id);
+    const willReplaceImage = shouldDeleteExistingFile(existingProduct.imgSrc, newImgSrc)
+    if (willReplaceImage) {
+      const key = existingProduct.imgSrc.split('/').pop();
+      await deleteFileUtil(key);
+      newImgSrc = await fileUploadUtil(newImgSrc);
+    }
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { $set: { ...req.body } },
+      { $set: { ...req.body, imgSrc: newImgSrc } },
       { new: true, runValidators: true }
     );
     if (!updatedProduct) {

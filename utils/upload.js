@@ -1,6 +1,7 @@
 const {
   S3Client,
   PutObjectCommand,
+  DeleteObjectCommand,
   ListObjectsCommand
 } = require("@aws-sdk/client-s3");
 
@@ -49,7 +50,32 @@ const getAllFilesUtil = async () => {
   }
 };
 
+const deleteFileUtil = async (key) => {
+  const client = getS3Client();
+  try {
+    await client.send(new DeleteObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: key
+    }));
+  } catch (err) {
+    console.error("Error deleting file:", err);
+    throw err;
+  }
+};
+
+const isS3Object = (url) => {
+  return url.includes(process.env.AWS_S3_URL);
+}
+
+const shouldDeleteExistingFile = (existingUrl, newData) => {
+  if (!isS3Object(existingUrl)) return false
+  return existingUrl !== newData;
+}
+
 module.exports = {
   fileUploadUtil,
-  getAllFilesUtil
+  getAllFilesUtil,
+  deleteFileUtil,
+  shouldDeleteExistingFile,
+  isS3Object
 };
