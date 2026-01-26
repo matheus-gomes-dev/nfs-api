@@ -1,12 +1,20 @@
 const Product = require('../models/Product');
+const { fileUploadUtil } = require('../utils/upload');
 
 const createProduct = async (req, res) => {
+  const { name, price, category, imgSrc: imageUpload } = req.body;
+  if (!name || !price || !category) {
+    return res.status(400).json({ error: 'Name, price, and category are required' });
+  }
   try {
-    const { name, price, category } = req.body;
-    if (!name || !price || !category) {
-      return res.status(400).json({ error: 'Name, price, and category are required' });
+    let imgSrc = ''
+    if (imageUpload) {
+      imgSrc = await fileUploadUtil(imageUpload);
     }
-    const newProduct = new Product(req.body);
+    const newProduct = new Product({
+      ...req.body,
+      imgSrc
+    });
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
   } catch (error) {
