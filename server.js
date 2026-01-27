@@ -5,6 +5,7 @@ const authController = require('./controllers/authController');
 const orderController = require('./controllers/orderController');
 const productController = require('./controllers/productController');
 const uploadController = require('./controllers/uploadController');
+const storageCustomerController = require('./controllers/storageCustomerController');
 const { authenticateToken } = require('./middlewares/authMiddleware');
 const connectDB = require('./models/database');
 const app = express();
@@ -52,6 +53,13 @@ app.delete('/products/:id', authenticateToken, productController.deleteProduct);
 // Upload Routes
 app.post('/uploads', authenticateToken, uploadController.fileUpload);
 app.get('/uploads', authenticateToken, uploadController.getAllFiles);
+
+// Storage Customer CRUD Routes
+app.post('/storage-customers', authenticateToken, storageCustomerController.createStorageCustomer);
+app.get('/storage-customers', authenticateToken, storageCustomerController.getStorageCustomers);
+app.get('/storage-customers/:id', authenticateToken, storageCustomerController.getStorageCustomerById);
+app.put('/storage-customers/:id', authenticateToken, storageCustomerController.updateStorageCustomer);
+app.delete('/storage-customers/:id', authenticateToken, storageCustomerController.deleteStorageCustomer);
 
 // Start the server
 app.listen(port, () => {
