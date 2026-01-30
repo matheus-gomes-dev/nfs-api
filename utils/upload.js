@@ -18,8 +18,16 @@ const getS3Client = () => {
 };
 
 const fileUploadUtil = async (data) => {
-  const mimeType = data.split(';')[0].split(':')[1];
-  const base64Data = data.split(',')[1];
+  let mimeType, base64Data;
+  
+  if (data.startsWith('data:')) {
+    mimeType = data.split(';')[0].split(':')[1];
+    base64Data = data.split(',')[1];
+  } else {
+    base64Data = data;
+    mimeType = 'image/jpeg';
+  }
+  
   const buffer = Buffer.from(base64Data, 'base64');
   const extension = mimeType.split('/')[1];
   const uploadTimestamp = Date.now();
